@@ -10,13 +10,13 @@ core.commands = {
         print(" ");
         core:Print("List of slash commands:");
         core:Print("|cff00cc66/dr menu|r - shows deathrollers menu");
-        core:Print("|cff00cc66/dr help|r - shows help info");
+		core:Print("|cff00cc66/dr help|r - shows help info");
+		core:Print("|cff00cc66/qr |r - quick roll between 1 - 9999");
+		core:Print("|cff00cc66/dr |r - quick deathroll from the last roll");
         print(" ");
     end,
 
-    ["roll"] = function()
-        RandomRoll(1,1000)
-    end,
+    ["roll"] = core.Roller.Roll,
 };
 
 local function HandleSlashCommands(str)	
@@ -55,6 +55,7 @@ local function HandleSlashCommands(str)
 	end
 end
 
+
 function core:Print(...)
     local hex = select(4, self.Menu:GetThemeColor());
     local prefix = string.format("|cff%s%s|r", hex:upper(), "Deathrollers:");
@@ -72,6 +73,9 @@ function core:init(event, name)
 		LoadAddOn("Blizzard_DebugTools");
 		FrameStackTooltip_Toggle();
 	end
+
+	SLASH_QUICKROLL1 = "/qr";
+    SlashCmdList.QUICKROLL = core.Roller.QuickRoll;
 
     SLASH_DEATHROLLERS1 = "/dr";
     SlashCmdList.DEATHROLLERS = HandleSlashCommands;

@@ -4,5 +4,6 @@
 ## DefaultState: enabled
 ## Version: 0.0.1
 
+roller.lua
 menu.lua
 init.lua

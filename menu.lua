@@ -42,10 +42,19 @@ function Menu:CreateButton( point, relativeFrame, relativePoint, yOffset, text)
     return btn;
 end
 
+function Menu:SetResult(str)
+    UIMenu.result:SetText(str);
+end
+
 function Menu:CreateMenu()
     UIMenu = CreateFrame("Frame", "DeathrollersFrame", UIParent, "BasicFrameTemplateWithInset");
     UIMenu:SetSize(200, 200);
     UIMenu:SetPoint("CENTER");
+    UIMenu:SetMovable(true);
+    UIMenu:EnableMouse(true);
+    UIMenu:RegisterForDrag("LeftButton");
+    UIMenu:SetScript("OnDragStart", UIMenu.StartMoving);
+    UIMenu:SetScript("OnDragStop", UIMenu.StopMovingOrSizing);
 
     -- Title
     UIMenu.title = UIMenu:CreateFontString(nill, "OVERLAY", "GameFontHighlight");
@@ -54,8 +63,14 @@ function Menu:CreateMenu()
 
     -- Buttons
     UIMenu.startBtn = self:CreateButton("CENTER", UIMenu, "TOP", -60, "Start")
+    UIMenu.startBtn:SetScript("OnClick",function()
+        core.Roller.QuickRoll();
+    end)
 
     UIMenu.rollBtn = self:CreateButton("TOP", UIMenu.startBtn, "BOTTOM", -10, "Roll")
+    UIMenu.rollBtn:SetScript("OnClick",function()
+        core.Roller.Roll();
+    end)
 
     -- Result label text
     UIMenu.resultLbl = UIMenu:CreateFontString(nill, "OVERLAY");

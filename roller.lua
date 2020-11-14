@@ -1,5 +1,12 @@
+-------------------------------------------
+-- Namespaces
+-------------------------------------------
+local _, core = ...;
+core.Roller = {};
 
--- functions --
+local Roller = core.Roller;
+
+local lastRoll = "";
 
 function splitString (inputstr, sep) --splits the given string: table value = index, key = string
 	if sep == nil then
@@ -25,6 +32,9 @@ function isRoll (inputstr) --checks if the string given is from a roll
 	end
 end
 
+function Roller:QuickRoll()
+	RandomRoll(1,9999);
+end
 
 -- main --
 
@@ -41,14 +51,14 @@ frame:SetScript("OnEvent",function(self,event,msg)
 	end
 end)
 
--- slash command to make roll
-SLASH_ROLL1 = "/dr"
-SlashCmdList["ROLL"] = function()
-	--r[table.getn(r)-2]
-	local r = splitString(lastRoll)
-	local rollHighK = table.getn(r) - 1
-	local rollHighV = r[rollHighK]
-	print(tonumber(rollHighV))
-	--message(r)
-	RandomRoll(1, tonumber(rollHighV))
+function Roller:Roll()
+	if (lastRoll ~= "") then
+		local r = splitString(lastRoll)
+		local rollHighK = table.getn(r) - 1
+		local rollHighV = r[rollHighK]
+		--print(tonumber(rollHighV))
+		RandomRoll(1, tonumber(rollHighV))
+	else
+		core:Print("There's nothing to roll against");
+	end
 end
