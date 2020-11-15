@@ -9,8 +9,9 @@ core.commands = {
     ["help"] = function()
         print(" ");
         core:Print("List of slash commands:");
-        core:Print("|cff00cc66/dr menu|r - shows deathrollers menu");
 		core:Print("|cff00cc66/dr help|r - shows help info");
+		core:Print("|cff00cc66/dr menu|r - shows deathrollers menu");
+		core:Print("|cff00cc66/drm|r - also shows deathrollers menu");
 		core:Print("|cff00cc66/qr |r - quick roll between 1 - 9999");
 		core:Print("|cff00cc66/dr |r - quick deathroll from the last roll");
         print(" ");
@@ -78,7 +79,10 @@ function core:init(event, name)
     SlashCmdList.QUICKROLL = core.Roller.QuickRoll;
 
     SLASH_DEATHROLLERS1 = "/dr";
-    SlashCmdList.DEATHROLLERS = HandleSlashCommands;
+	SlashCmdList.DEATHROLLERS = HandleSlashCommands;
+	
+	SLASH_MENU1 = "/drm";
+	SlashCmdList.MENU = core.Menu.Toggle;
 
     core:Print("Ready to roll", UnitName("player").."!");
     core:Print("|cff00cc66/dr help|r - shows deathrollers help info");

@@ -5,7 +5,7 @@ local _, core = ...;
 core.Menu = {};
 
 local Menu = core.Menu;
-local UIMenu;
+--local UIMenu;
 
 --------------------------------------
 -- Defaults (usually a database!)
@@ -42,13 +42,16 @@ function Menu:CreateButton( point, relativeFrame, relativePoint, yOffset, text)
     return btn;
 end
 
-function Menu:SetResult(str)
-    UIMenu.result:SetText(str);
+function Menu:SetResult()
+    if (UIMenu ~= nil) then
+        local r = core.Roller:GetRollAmount(lastRoll);
+        UIMenu.result:SetText(r);
+    end
 end
 
 function Menu:CreateMenu()
     UIMenu = CreateFrame("Frame", "DeathrollersFrame", UIParent, "BasicFrameTemplateWithInset");
-    UIMenu:SetSize(200, 200);
+    UIMenu:SetSize(150, 230);
     UIMenu:SetPoint("CENTER");
     UIMenu:SetMovable(true);
     UIMenu:EnableMouse(true);
@@ -61,27 +64,43 @@ function Menu:CreateMenu()
     UIMenu.title:SetPoint("LEFT", UIMenu.TitleBg, "LEFT", 5, 0);
     UIMenu.title:SetText("Deathrollers");
 
+    -- Edit box
+    UIMenu.amountEb = CreateFrame("EditBox",nil,UIMenu,"InputBoxTemplate");
+    UIMenu.amountEb:SetWidth(80);
+    UIMenu.amountEb:SetHeight(24);
+    UIMenu.amountEb:SetFontObject(GameFontNormal);
+    UIMenu.amountEb:SetPoint("CENTER", UIMenu, "TOP", 0, -50);
+    UIMenu.amountEb:ClearFocus(self);
+    UIMenu.amountEb:SetAutoFocus(false);
+    UIMenu.amountEb:Insert("9999");
+
     -- Buttons
-    UIMenu.startBtn = self:CreateButton("CENTER", UIMenu, "TOP", -60, "Start")
+    UIMenu.startBtn = self:CreateButton("CENTER", UIMenu.amountEb, "TOP", -50, "Start")
     UIMenu.startBtn:SetScript("OnClick",function()
-        core.Roller.QuickRoll();
+        local amount = tonumber(UIMenu.amountEb:GetText():lower());
+        if (amount ~= nil) then
+            RandomRoll(1, amount);
+        else
+            print("You can only roll numbers!");
+        end
     end)
 
     UIMenu.rollBtn = self:CreateButton("TOP", UIMenu.startBtn, "BOTTOM", -10, "Roll")
     UIMenu.rollBtn:SetScript("OnClick",function()
         core.Roller.Roll();
+        --print(lastRoll);
     end)
 
     -- Result label text
     UIMenu.resultLbl = UIMenu:CreateFontString(nill, "OVERLAY");
     UIMenu.resultLbl:SetFontObject("GameFontNormal");
-    UIMenu.resultLbl:SetPoint("CENTER", UIMenu, "TOP", 0, -140);
+    UIMenu.resultLbl:SetPoint("CENTER", UIMenu.rollBtn, "TOP", 0, -60);
     UIMenu.resultLbl:SetText("Result:");
 
     -- Result text
     UIMenu.result = UIMenu:CreateFontString(nill, "OVERLAY");
     UIMenu.result:SetFontObject("NumberFontNormalYellow");
-    UIMenu.result:SetPoint("CENTER", UIMenu, "TOP", 0, -160);
+    UIMenu.result:SetPoint("CENTER", UIMenu.resultLbl, "TOP", 0, -30);
     UIMenu.result:SetText("0");
 
     UIMenu:Hide();
